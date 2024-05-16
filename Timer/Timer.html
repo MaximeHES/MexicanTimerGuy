@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <style>
+        body {
+            font-family: 'Grenze Gotisch', cursive;
+            text-align: center;
+        }
+        #timer {
+            font-size: 88px;
+            margin-top: 50px;
+        }
+        #start-button {
+            cursor: pointer;
+        }
+        #gif-container {
+            width: 100%;
+            height: 0;
+            padding-bottom: 100%;
+            position: relative;
+            display: none;
+        }
+        #gif-container iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch&display=swap" rel="stylesheet">
+</head>
+<body>
+<h1 style="font-size: 112px;">Time until Mexico hombre!</h1>
+<img id="start-button" src="icons8-mexican-48.png" alt="Start Timer" onclick="startTimer()" style="width: 200px; height: auto;">
+<p id="timer"></p>
+<div id="gif-container"></div>
+
+<script>
+    function startTimer() {
+        var timerDisplay = document.getElementById('timer');
+        var gifContainer = document.getElementById('gif-container');
+        gifContainer.style.display = 'none'; // Hide the GIF initially
+
+        var gifEmbed = '<iframe src="https://giphy.com/embed/ISCSLTFXD7fay4nD8Z" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>';
+
+        var now = new Date();
+        var targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 19, 0, 0); // 19:00 (7:00 PM) UTC+1
+        var timeDifference = targetTime - now;
+
+        if (timeDifference <= 0) {
+            timerDisplay.textContent = "Time's up que pasooo viva meXicoo cabron!";
+            return;
+        }
+
+        var intervalId = setInterval(function() {
+            var hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+            var timerText = hours.toString().padStart(2, '0') + ":" +
+                minutes.toString().padStart(2, '0') + ":" +
+                seconds.toString().padStart(2, '0');
+            timerDisplay.textContent = timerText;
+
+            if (timeDifference <= 0) {
+                clearInterval(intervalId);
+                timerDisplay.textContent = "Time's up!";
+            }
+
+            timeDifference -= 1000;
+        }, 1000);
+
+        // Append GIF after 5 seconds
+        setTimeout(function() {
+            gifContainer.innerHTML = gifEmbed;
+            gifContainer.style.display = 'block'; // Show the GIF
+        }, 5000);
+    }
+</script>
+</body>
+</html>
